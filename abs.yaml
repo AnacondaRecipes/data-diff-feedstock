@@ -1,0 +1,6 @@
+channels:
+  - https://staging.continuum.io/prefect/fs/tabulate-feedstock/pr3/29f5deb
+  - https://staging.continuum.io/prefect/fs/dsnparse-feedstock/pr2/cd9559c
+
+upload_channels:
+  - sfe1ed40

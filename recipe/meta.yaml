@@ -1,5 +1,5 @@
 {% set name = "data-diff" %}
-{% set version = "0.9.14" %}
+{% set version = "0.9.16" %}
 
 package:
   name: {{ name|lower }}
@@ -7,12 +7,12 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_') }}-{{ version }}.tar.gz
-  sha256: 2d01caac455c0144aca525504276c40cd244eb9dd3a7acc9c0b114e88ce08f80
+  sha256: a68a850923f3e4b9225a46e60c4c65226b91a6dc1e05b1f6a55890bd140ce110
 
 build:
-  noarch: python
-  script: {{ PYTHON }} -m pip install . -vv
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation --ignore-installed --no-cache-dir -vv
   number: 0
+  skip: true  # [py<38]
   entry_points:
     - data-diff = data_diff.__main__:main
 
@@ -20,9 +20,9 @@ requirements:
   host:
     - pip
     - poetry-core >=1.0.0
-    - python >=3.8,<4.0
+    - python
   run:
-    - python >=3.8,<4.0
+    - python
     - pydantic ==1.10.12
     - dsnparse <0.2.0
     - click >=8.1.0,<9.0.0
@@ -34,7 +34,7 @@ requirements:
     - urllib3 <2
     - typing-extensions >=4.0.1
     - attrs >=23.1.0,<24.0.0
-    - mashumaro >=3.8.1,<3.11.0
+    - mashumaro >=2.9,<3.11.0
 
     # These are required though not listed in upstream requirements
     - packaging
@@ -43,23 +43,30 @@ requirements:
     # From mashumaro[msgpack]
     - msgpack-python >=0.5.6
 
+  run_constrained:
+    - snowflake-connector-python >=3.0.2,<4.0.0
+
 test:
   imports:
     - data_diff
   commands:
     # Skip pip check due to prance version checking being broken
-    - pip check
+    # - pip check
     - data-diff --help
+    - pip check
   requires:
     - pip
 
 about:
   home: https://github.com/datafold/data-diff
-  doc_url: https://data-diff.readthedocs.io/en/latest/
-  summary: Command-line tool and Python library to efficiently diff rows across two different databases.
+  summary: Compare datasets fast, within or across SQL databases.
+  description: Compare datasets fast, within or across SQL databases.
   license: MIT
+  license_family: MIT
   license_file:
     - LICENSE
+  doc_url: https://data-diff.readthedocs.io
+  dev_url: https://github.com/datafold/data-diff
 
 extra:
   recipe-maintainers:
